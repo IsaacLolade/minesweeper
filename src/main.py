@@ -22,6 +22,7 @@ def put_mines(game_dict: dict) -> None:
         rand_y = random.randint(0, 7)
 
         game_dict[rand_x][rand_y][0] = 'm'
+        mines_count += 1
 
     # return game_dict
 
@@ -33,8 +34,14 @@ def create_game_table(game_dict: dict) -> None:
             globals()[f"btn_{r_key-c_key}"] = StringVar(window)
             globals()[f"btn_{r_key-c_key}"].set(c_val[0])
             # textvariable=globals()[f"btn_{r_key-c_key}"] -> Button textvariable
-            Button(window, image=c_val[1]).grid(
+            Button(window, image=c_val[1], textvariable=globals()[f"btn_{r_key-c_key}"], command=partial(print_but_value, globals()[f"btn_{r_key-c_key}"].get())).grid(
                 row=r_key+1, column=c_key)
+
+# Test function
+
+
+def print_but_value(param):
+    print(param)
 
 
 def timer():
@@ -51,9 +58,9 @@ def timer():
 
 
 def restart():
-    global stop
+    global stop, init_seconds
     stop = 1
-    seconds.set(0)
+    init_seconds = round(time())
     stop = 0
 
 
@@ -104,6 +111,7 @@ if __name__ == "__main__":
     # Label(window, textvariable=seconds, justify=CENTER,
     #       font=('KacstDigital', 20), bg='black', fg='red').grid(row=0, column=5, columnspan=2, padx=10, pady=10)
 
+    put_mines(game)
     create_game_table(game)
 
     window.mainloop()
